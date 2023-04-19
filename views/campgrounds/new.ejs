@@ -1,8 +1,15 @@
 <% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/images.css" />
 <div class="row">
   <h1 class="text-center">New Campground</h1>
   <div class="col-6 offset-3">
-    <form action="/campgrounds" method="post" novalidate class="validated-form">
+    <form
+      action="/campgrounds"
+      method="post"
+      novalidate
+      class="validated-form"
+      enctype="multipart/form-data"
+    >
       <div class="mb-3">
         <label class="form-label" for="title">Title</label>
         <input
@@ -20,17 +27,8 @@
           class="form-control"
           type="text"
           name="campground[location]"
-          id="location" required
-        />
-        <div class="valid-feedback">Looks good!</div>
-      </div>
-      <div class="mb-3">
-        <label class="form-label" for="image">Image Url</label>
-        <input
-          class="form-control"
-          type="text"
-          name="campground[image]"
-          id="image" required
+          id="location"
+          required
         />
         <div class="valid-feedback">Looks good!</div>
       </div>
@@ -45,7 +43,8 @@
             name="campground[price]"
             placeholder="0.00"
             aria-label="Price"
-            aria-describedby="price-label" required
+            aria-describedby="price-label"
+            required
           />
         </div>
       </div>
@@ -60,11 +59,25 @@
         ></textarea>
       </div>
       <div class="mb-3">
+        <label class="form-label">Choose Image(s)</label>
+        <div class="input-group custom-file-button">
+          <label class="input-group-text" for="image">Browse</label>
+          <input
+            class="form-control custom-file-input"
+            type="file"
+            id="image"
+            name="image"
+            multiple
+          />
+        </div>
+      </div>
+      <div class="mb-3">
         <button class="btn btn-success">Add Campground</button>
       </div>
     </form>
     <br />
-    <a href="/campgrounds">All Campgrounds</a>
+    <div class="mb-2">
+      <a href="/campgrounds">All Campgrounds</a>
+    </div>
   </div>
 </div>
-
