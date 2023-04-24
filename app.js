@@ -17,12 +17,14 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const MongoStore = require('connect-mongo');
+
 
 const userRoutes = require('./routes/users')
 const campgroundRoutes = require("./routes/campgrounds")
 const reviewRoutes = require("./routes/reviews")
-
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp');
+const dbUrl = "mongodb://127.0.0.1:27017/yelp-camp";
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
@@ -31,7 +33,7 @@ db.once('open', () => {
 })
 
 const app = express()
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'));
@@ -42,7 +44,20 @@ app.use(urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(mongoSanitize());
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
+
+store.on("error", function(e) {
+    console.log("SESSION STORE ERROR!!", e)
+})
+
 const sessionConfig = {
+    store: store,
     name: "session",
     secret: 'thisshouldbeabettersecret',
     resave: false,
@@ -144,6 +159,6 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(port, () => {
-    console.log('Serving on port 3000')
+    console.log(`Serving on port ${port}`)
 })
 
