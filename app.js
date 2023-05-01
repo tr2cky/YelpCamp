@@ -97,6 +97,13 @@ const connectSrcUrls = [
     "https://events.mapbox.com/",
 ];
 const fontSrcUrls = ["data:"];
+
+app.use(
+    helmet({
+      crossOriginEmbedderPolicy: false,
+      // ...
+    })
+  );
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
@@ -117,6 +124,7 @@ app.use(
         },
     })
 );
+
 
 
 app.use(passport.initialize());
